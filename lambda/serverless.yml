@@ -98,17 +98,30 @@ resources:
 #    - exclude-me.py
 #    - exclude-me-dir/**
 
+package:
+  individually: true
+  exclude:
+  - src/**
+  - venv/**
+
 functions:
   streamclipsGetClips:
     handler: src/get_clips/handler.handler
     name: streamclips-get-100-clips
     description: Retrieve the top 100 clips from a game
     role: get100Clips #  Resource name
+    package:
+      include:
+        - src/get_clips/**
+
   getTop100Games:
     handler: src/get_top_100_games/handler.handler
     name: get-top-100-games
     description: Get the top 98 games and send them to games_to_process
     role: getTop100Games  #  Resource name
+    package:
+      include:
+        - src/get_top_100_games/**
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

@@ -1,20 +1,28 @@
 import boto3
 import requests
+import json
 
 
 def handler(event, context):
-    event = {"id": "488615", "name": "Street Fighter V"}
-    client_id = '6sugaldogiglso2ddyovsl9cmsda67'
+    # FUCK3
+    client = boto3.client('secretsmanager')
+
+    def get_secret(key):
+        res = client.get_secret_value(
+            SecretId='TWITCHCREDENTIALS'
+        )
+        res = json.loads(res)
+        return res[key]
+
+    client_id = get_secret('TWITCH_CLIENT_ID')
     clip_get_url = 'https://api.twitch.tv/helix/clips'
-    client = boto3.client('sqs')
-    game_queue_url = 'https://sqs.us-west-2.amazonaws.com/422371343929/games_to_process'
-    queue_errors = []
-    num_of_games = 0
 
     headers = {'Client-ID': client_id}
     params = {'first': 100, 'game_id': event['id']}  # Actually 98
 
     res = requests.get(url=clip_get_url, params=params, headers=headers)
+
+    # Add clip to database
 
     if not res.ok:
         return {
@@ -24,7 +32,6 @@ def handler(event, context):
         }
 
     return {
-        "is_errors": True if len(queue_errors) > 0 else False,
-        "errors": queue_errors,
+        "is_errors": True if res.ok else False,
         "body": res.json()
     }

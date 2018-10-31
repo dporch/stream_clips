@@ -4,12 +4,20 @@ import requests
 
 
 def handler(event, context):
-    client_id = '6sugaldogiglso2ddyovsl9cmsda67'
+    client = boto3.client('secretsmanager')
+
+    def get_secret(key):
+        res = client.get_secret_value(
+            SecretId='TWITCHCREDENTIALS'
+        )
+        res = json.loads(res)
+        return res[key]
+
+    client_id = get_secret('TWITCH_CLIENT_ID')
     top_games_url = 'https://api.twitch.tv/helix/games/top'
     client = boto3.client('sqs')
     game_queue_url = 'https://sqs.us-west-2.amazonaws.com/422371343929/games_to_process'
     queue_errors = []
-    num_of_games = 0
 
     headers = {'Client-ID': client_id}
     params = {'first': 100}  # Actually 98
