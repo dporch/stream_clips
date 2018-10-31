@@ -4,7 +4,6 @@ import json
 
 
 def handler(event, context):
-    # FUCK3
     client = boto3.client('secretsmanager')
 
     def get_secret(key):
