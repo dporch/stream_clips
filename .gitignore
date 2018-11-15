@@ -108,3 +108,6 @@ venv.bak/
 
 # Itellij Configuration Files
 .idea
+
+#ignore vim .swp files
+*.swp
