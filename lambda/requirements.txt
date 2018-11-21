@@ -10,3 +10,4 @@ requests==2.*
 s3transfer==0.*
 six==1.*
 urllib3==1.*
+psycopg2==2.*
